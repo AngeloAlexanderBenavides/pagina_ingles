@@ -139,7 +139,7 @@ const SidebarContent = ({ activeTab, setActiveTab, user, logout, userLevel }: an
   <div className="flex flex-col h-full">
     <div className="flex items-center gap-3 mb-10">
       <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#00E0FF] shadow-[0_0_15px_rgba(0,224,255,0.3)] flex-shrink-0">
-        <img src="/placeholder-logo.png" alt="Logo" className="w-full h-full object-cover object-center scale-110" />
+        <img src="/fondoingles.png" alt="Logo" className="w-full h-full object-cover object-center scale-110" />
       </div>
       <span className="text-2xl font-extrabold tracking-tight text-white">Inglés<span className="text-[#00E0FF]">Total</span></span>
     </div>

@@ -17,7 +17,7 @@ export default function LandingPage() {
         <div className="max-w-[1100px] mx-auto px-5 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3 text-xl font-bold">
             <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#00E0FF] shadow-[0_0_10px_rgba(0,224,255,0.3)]">
-              <img src="/placeholder-logo.png" alt="Logo" className="w-full h-full object-cover object-center scale-110" />
+              <img src="/fondoingles.png" alt="Logo" className="w-full h-full object-cover object-center scale-110" />
             </div>
             <span>InglésPara<span className="text-[#00E0FF]">Todos</span></span>
           </div>

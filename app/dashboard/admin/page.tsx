@@ -70,7 +70,7 @@ export default function AdminDashboard() {
                   <div className="flex flex-col gap-6 mt-6">
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-full overflow-hidden border border-cyan-500/50 bg-slate-900">
-                        <img src="/placeholder-logo.png" alt="Logo" className="w-full h-full object-cover object-center scale-110" />
+                        <img src="/fondoingles.png" alt="Logo" className="w-full h-full object-cover object-center scale-110" />
                       </div>
                       <span className="font-bold text-xl tracking-tight">Admin Portal</span>
                     </div>
