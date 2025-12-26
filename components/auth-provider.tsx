@@ -54,13 +54,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [user, isLoading, pathname, router])
 
-  const updateProgress = (unitId: string, score: number) => {
+  const updateProgress = async (unitId: string, score: number) => {
     if (!user) return
 
     // Calculate gems earned (e.g., 10 gems per perfect score, 5 for pass)
     const gemsEarned = score >= 3 ? 10 : 5;
 
-    // Update local state
+    // Optimistic update
     const updatedUser = { 
       ...user, 
       // @ts-ignore
@@ -71,70 +71,62 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(updatedUser)
     localStorage.setItem("user", JSON.stringify(updatedUser))
 
-    // Update "database" (localStorage users array)
-    const allUsers = JSON.parse(localStorage.getItem("users") || "[]")
-    const updatedUsers = allUsers.map((u: any) => 
-      u.id === user.id ? { ...u, progress: { ...u.progress, [unitId]: score }, gems: (u.gems || 0) + gemsEarned } : u
-    )
-    localStorage.setItem("users", JSON.stringify(updatedUsers))
+    try {
+      await fetch('/api/user/progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          unitId,
+          score,
+          gemsEarned
+        })
+      })
+    } catch (error) {
+      console.error("Failed to sync progress", error)
+    }
   }
 
   const login = async (email: string, password: string) => {
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      })
 
-    let allUsers = JSON.parse(localStorage.getItem("users") || "[]")
-    
-    // Fallback: If localStorage is empty, use mockUsers directly
-    if (allUsers.length === 0) {
-      allUsers = mockUsers;
-      localStorage.setItem("users", JSON.stringify(mockUsers));
+      if (res.ok) {
+        const user = await res.json()
+        setUser(user)
+        localStorage.setItem("user", JSON.stringify(user))
+        return true
+      }
+      return false
+    } catch (error) {
+      console.error("Login error", error)
+      return false
     }
-
-    const foundUser = allUsers.find(
-      (u: any) => (u.email === email || u.name === email) && u.password === password
-    )
-
-    if (foundUser) {
-      const { password, ...userWithoutPassword } = foundUser
-      setUser(userWithoutPassword)
-      localStorage.setItem("user", JSON.stringify(userWithoutPassword))
-      return true
-    }
-
-    return false
   }
 
   const register = async (name: string, email: string, password: string) => {
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password })
+      })
 
-    const allUsers = JSON.parse(localStorage.getItem("users") || "[]")
-    
-    if (allUsers.find((u: any) => u.email === email)) {
-      return false // User already exists
+      if (res.ok) {
+        const user = await res.json()
+        setUser(user)
+        localStorage.setItem("user", JSON.stringify(user))
+        return true
+      }
+      return false
+    } catch (error) {
+      console.error("Register error", error)
+      return false
     }
-
-    const newUser = {
-      id: Math.random().toString(36).substr(2, 9),
-      name,
-      email,
-      password,
-      role: "student", // Default role
-      progress: {},
-      lives: 5,
-      gems: 100
-    }
-
-    allUsers.push(newUser)
-    localStorage.setItem("users", JSON.stringify(allUsers))
-    
-    // Auto login after register
-    const { password: _, ...userWithoutPassword } = newUser
-    // @ts-ignore
-    setUser(userWithoutPassword)
-    // @ts-ignore
-    localStorage.setItem("user", JSON.stringify(userWithoutPassword))
-    
-    return true
   }
 
   const logout = () => {
