@@ -82,9 +82,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (email: string, password: string) => {
     await new Promise((resolve) => setTimeout(resolve, 500))
 
-    const allUsers = JSON.parse(localStorage.getItem("users") || "[]")
+    let allUsers = JSON.parse(localStorage.getItem("users") || "[]")
+    
+    // Fallback: If localStorage is empty, use mockUsers directly
+    if (allUsers.length === 0) {
+      allUsers = mockUsers;
+      localStorage.setItem("users", JSON.stringify(mockUsers));
+    }
+
     const foundUser = allUsers.find(
-      (u: any) => u.email === email && u.password === password
+      (u: any) => (u.email === email || u.name === email) && u.password === password
     )
 
     if (foundUser) {
