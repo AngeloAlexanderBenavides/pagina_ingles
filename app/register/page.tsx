@@ -6,6 +6,7 @@ import { motion } from "framer-motion"
 import { ArrowLeft, User, Mail, Lock, Target, Check, Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
+import { useAuth } from "@/components/auth-provider"
 
 export default function RegisterPage() {
   const [name, setName] = useState("")
@@ -15,6 +16,7 @@ export default function RegisterPage() {
   const [passwordStrength, setPasswordStrength] = useState(0)
   const router = useRouter()
   const { toast } = useToast()
+  const { register } = useAuth()
 
   // Simple password strength calculator
   useEffect(() => {
@@ -31,15 +33,30 @@ export default function RegisterPage() {
     e.preventDefault()
     setIsLoading(true)
 
-    // Simulación de registro
-    setTimeout(() => {
-      setIsLoading(false)
+    try {
+      const success = await register(name, email, password)
+      if (success) {
+        toast({
+          title: "¡Cuenta creada!",
+          description: "Bienvenido a la plataforma.",
+        })
+        router.push("/dashboard")
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Error al registrar",
+          description: "El correo ya está en uso o hubo un problema.",
+        })
+      }
+    } catch (error) {
       toast({
-        title: "¡Cuenta creada!",
-        description: "Bienvenido a la plataforma. Inicia sesión para continuar.",
+        variant: "destructive",
+        title: "Error",
+        description: "Algo salió mal. Inténtalo de nuevo.",
       })
-      router.push("/login")
-    }, 1500)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
