@@ -22,8 +22,8 @@ export function PracticeView({ unit, onClose, onComplete }: PracticeViewProps) {
 
   const exercises = unit.exercises || []
   const currentExercise = exercises[currentExerciseIndex]
-  
-  // Calculate progress: 
+
+  // Calculate progress:
   // If in theory: 0%
   // If in practice: based on COMPLETED exercises (current index)
   const progress = viewState === 'theory' ? 0 : ((currentExerciseIndex) / (exercises.length || 1)) * 100
@@ -32,10 +32,10 @@ export function PracticeView({ unit, onClose, onComplete }: PracticeViewProps) {
     if ('speechSynthesis' in window) {
       // Cancel any ongoing speech
       window.speechSynthesis.cancel()
-      
+
       // Replace underscores with "blank" for better pronunciation in exercises
       const textToSpeak = text.replace(/_+/g, 'blank')
-      
+
       const utterance = new SpeechSynthesisUtterance(textToSpeak)
       utterance.lang = 'en-US' // Set language to English
       utterance.rate = 0.9 // Slightly slower for better clarity
@@ -56,7 +56,7 @@ export function PracticeView({ unit, onClose, onComplete }: PracticeViewProps) {
 
     const isCorrect = selectedOption === currentExercise.correctAnswer
     setStatus(isCorrect ? 'correct' : 'incorrect')
-    
+
     if (isCorrect) {
       setScore(s => s + 1)
     }
@@ -85,13 +85,13 @@ export function PracticeView({ unit, onClose, onComplete }: PracticeViewProps) {
   if (viewState === 'result') {
     return (
       <div className="fixed inset-0 z-50 bg-[#050A18] flex items-center justify-center p-4">
-        <motion.div 
+        <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           className="bg-[#0B1121] border-2 border-[#1F2937] rounded-[30px] p-8 max-w-md w-full text-center relative overflow-hidden"
         >
           <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#00E0FF] via-[#FFC800] to-[#E91E63]" />
-          
+
           <div className="w-24 h-24 bg-[#FFC800]/20 rounded-full flex items-center justify-center mx-auto mb-6">
             <Trophy className="w-12 h-12 text-[#FFC800]" />
           </div>
@@ -110,7 +110,7 @@ export function PracticeView({ unit, onClose, onComplete }: PracticeViewProps) {
             </div>
           </div>
 
-          <button 
+          <button
             onClick={() => onComplete(score)}
             className="w-full py-4 bg-[#00E0FF] text-[#050A18] font-extrabold rounded-2xl shadow-[0_6px_0_#0099b0] active:shadow-none active:translate-y-[6px] transition-all uppercase tracking-wide"
           >
@@ -129,7 +129,7 @@ export function PracticeView({ unit, onClose, onComplete }: PracticeViewProps) {
           <X className="w-8 h-8" />
         </button>
         <div className="flex-1 h-4 bg-[#1F2937] rounded-full overflow-hidden">
-          <motion.div 
+          <motion.div
             className="h-full bg-[#00E0FF]"
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
@@ -143,8 +143,8 @@ export function PracticeView({ unit, onClose, onComplete }: PracticeViewProps) {
       </div>
 
       {/* Content */}
-      <div className="flex-1 flex items-center justify-center p-6 overflow-y-auto">
-        <div className="max-w-2xl w-full">
+      <div className="flex-1 flex justify-center p-6 overflow-y-auto">
+        <div className="max-w-2xl w-full my-auto">
           <AnimatePresence mode="wait">
             {viewState === 'theory' ? (
               <motion.div
@@ -164,7 +164,7 @@ export function PracticeView({ unit, onClose, onComplete }: PracticeViewProps) {
                 </div>
 
                 <div className="grid gap-6">
-                  
+
                   {/* 1. VOCABULARIO (Interactivo) */}
                   {unit.vocabulary && (
                     <div className="bg-[#111827] border-2 border-[#1F2937] rounded-[20px] p-6 relative shadow-[0_4px_0_#0d121f] hover:-translate-y-0.5 transition-transform group">
@@ -172,11 +172,11 @@ export function PracticeView({ unit, onClose, onComplete }: PracticeViewProps) {
                         <Book className="w-6 h-6" />
                         <span>Vocabulario Clave</span>
                       </div>
-                      
+
                       <div className="flex flex-wrap gap-3">
                         {unit.vocabulary.map((item, i) => (
-                          <button 
-                            key={i} 
+                          <button
+                            key={i}
                             onClick={() => speakText(item)}
                             className="flex items-center gap-2 bg-[#00E0FF]/10 border border-[#00E0FF]/30 text-[#00E0FF] px-4 py-2 rounded-xl font-semibold cursor-pointer hover:bg-[#00E0FF] hover:text-[#050A18] hover:scale-105 transition-all shadow-none hover:shadow-[0_0_15px_rgba(0,224,255,0.4)]"
                           >
@@ -194,7 +194,7 @@ export function PracticeView({ unit, onClose, onComplete }: PracticeViewProps) {
                         <Zap className="w-6 h-6" />
                         <span>Power-Up Gramatical</span>
                       </div>
-                      
+
                       <div className="bg-[#7B61FF]/10 border-l-4 border-[#7B61FF] p-4 rounded-lg font-mono text-[#d8b4fe] text-lg">
                         {unit.grammar}
                       </div>
@@ -208,9 +208,9 @@ export function PracticeView({ unit, onClose, onComplete }: PracticeViewProps) {
                         <MessageSquare className="w-6 h-6" />
                         <span>Ejemplo en Contexto</span>
                       </div>
-                      
+
                       <div className="bg-[#1F2937] rounded-tr-[20px] rounded-br-[20px] rounded-bl-[20px] p-5 flex items-center gap-4 border border-[#374151]">
-                        <button 
+                        <button
                           onClick={() => speakText(unit.useCase || "")}
                           className="w-12 h-12 bg-[#10B981] rounded-full flex items-center justify-center text-[#050A18] shadow-[0_4px_0_#047857] active:translate-y-[2px] active:shadow-none cursor-pointer flex-shrink-0 transition-transform hover:scale-105"
                         >
@@ -232,8 +232,8 @@ export function PracticeView({ unit, onClose, onComplete }: PracticeViewProps) {
                       </div>
                       <p className="text-lg font-bold text-white mb-1">{unit.challenge}</p>
                       <p className="text-[#9CA3AF] text-sm mb-6">Completa esta misión para ganar XP extra.</p>
-                      
-                      <button 
+
+                      <button
                         onClick={handleStartPractice}
                         className="w-full py-4 bg-[#FFC800] text-[#050A18] font-extrabold rounded-xl shadow-[0_5px_0_#b38600] active:translate-y-[4px] active:shadow-none transition-all uppercase tracking-wide text-lg hover:brightness-110"
                       >
@@ -264,7 +264,7 @@ export function PracticeView({ unit, onClose, onComplete }: PracticeViewProps) {
                 {currentExercise && (
                   <>
                     <div className="flex items-start justify-center gap-4 mb-2">
-                      <button 
+                      <button
                         onClick={() => speakText(currentExercise.question)}
                         className="mt-1 p-3 bg-[#1F2937] rounded-xl text-[#00E0FF] hover:bg-[#00E0FF] hover:text-[#050A18] transition-colors flex-shrink-0 shadow-[0_4px_0_rgba(0,0,0,0.2)] active:translate-y-[2px] active:shadow-none"
                         title="Escuchar pronunciación"
@@ -284,8 +284,8 @@ export function PracticeView({ unit, onClose, onComplete }: PracticeViewProps) {
                           disabled={status !== 'idle'}
                           className={cn(
                             "p-6 rounded-2xl border-2 text-left text-lg font-semibold transition-all flex items-center justify-between group",
-                            selectedOption === idx 
-                              ? "border-[#00E0FF] bg-[#00E0FF]/10 text-[#00E0FF]" 
+                            selectedOption === idx
+                              ? "border-[#00E0FF] bg-[#00E0FF]/10 text-[#00E0FF]"
                               : "border-[#1F2937] bg-[#0B1121] hover:border-[#374151] text-white",
                             status === 'correct' && idx === currentExercise.correctAnswer && "border-[#10B981] bg-[#10B981]/20 text-[#10B981]",
                             status === 'incorrect' && selectedOption === idx && "border-[#F43F5E] bg-[#F43F5E]/20 text-[#F43F5E]"
@@ -295,8 +295,8 @@ export function PracticeView({ unit, onClose, onComplete }: PracticeViewProps) {
                           {selectedOption === idx && (
                             <div className={cn(
                               "w-6 h-6 rounded-full border-2 flex items-center justify-center",
-                              status === 'idle' ? "border-[#00E0FF]" : 
-                              status === 'correct' ? "border-[#10B981] bg-[#10B981] text-[#050A18]" : 
+                              status === 'idle' ? "border-[#00E0FF]" :
+                              status === 'correct' ? "border-[#10B981] bg-[#10B981] text-[#050A18]" :
                               "border-[#F43F5E] bg-[#F43F5E] text-white"
                             )}>
                               {status === 'idle' && <div className="w-2 h-2 bg-[#00E0FF] rounded-full" />}
@@ -319,7 +319,7 @@ export function PracticeView({ unit, onClose, onComplete }: PracticeViewProps) {
       {viewState === 'practice' && (
         <div className={cn(
           "p-6 border-t border-[#1F2937] transition-colors duration-300",
-          status === 'correct' ? "bg-[#10B981]/10 border-[#10B981]/30" : 
+          status === 'correct' ? "bg-[#10B981]/10 border-[#10B981]/30" :
           status === 'incorrect' ? "bg-[#F43F5E]/10 border-[#F43F5E]/30" : "bg-[#0B1121]"
         )}>
           <div className="max-w-2xl mx-auto flex items-center justify-between">

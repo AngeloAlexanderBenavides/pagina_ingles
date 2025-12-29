@@ -49,7 +49,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-[#050A18] text-white flex items-center justify-center p-5 font-sans relative">
-      
+
       {/* Botón Volver */}
       <Link href="/" className="absolute top-8 left-8 z-50">
         <motion.div
@@ -62,13 +62,13 @@ export default function LoginPage() {
       </Link>
 
       {/* Contenedor Principal */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
         className="flex flex-col md:flex-row w-full max-w-[1000px] bg-[#0B1121] rounded-[30px] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.5)] border-2 border-[#1F2937] min-h-[600px]"
       >
-        
+
         {/* LADO IZQUIERDO: Visual */}
         <div className="flex-1 bg-gradient-to-br from-[#050A18] to-[#0c1633] flex flex-col items-center justify-center p-10 border-r-0 md:border-r-2 border-[#1F2937] relative overflow-hidden">
           {/* Círculos de fondo */}
@@ -147,9 +147,6 @@ export default function LoginPage() {
             </Link>
           </div>
 
-          <div className="mt-8 p-3 bg-white/5 rounded-xl text-xs text-center text-slate-500">
-            Demo: admin@example.com / admin
-          </div>
         </div>
 
       </motion.div>
